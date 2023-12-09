@@ -1,0 +1,59 @@
+---
+# tasks file for classroom
+- import_tasks: /root/ansible/roles/classroom/network/config.yml
+- import_tasks: /root/ansible/roles/classroom/packages/packages.yml
+- import_tasks: /root/ansible/roles/classroom/services/start_service.yml
+- import_tasks: /root/ansible/roles/classroom/firewall/firewall.yml
+
+- name: edit /etc/chrony.conf file
+  lineinfile:
+        dest: /etc/chrony.conf
+        regexp: '(#allow 192.168*)'
+        line: 'allow 172.25.250.0/24'
+        backrefs: yes
+
+- import_tasks: /root/ansible/roles/classroom/services/restart_service.yml
+
+- name: create directory
+  file:
+        path: /var/www/html/rhel9.0/x86_64/
+        state: directory
+
+- name: create link
+  file:
+        src: /a
+        dest: /var/www/html/rhel9.0/x86_64/dvd
+        state: link
+
+
+- import_tasks: /root/ansible/roles/classroom/services/restart_service.yml
+
+- name: create rhome directory
+  file:
+        path: /rhome
+        state: directory
+- name: create user remoteuser0
+  user:
+        name: remoteuser0
+        home: /rhome/remoteuser0
+        state: present
+- name: give ACL permission to nobody
+  acl:
+        path: /rhome/remoteuser0
+        entity: nobody
+        etype: user
+        permissions: rwx
+        state: present
+- name: create /etc/exports file
+  file:
+        path: /etc/exports
+        state: touch
+
+- name: edit /etc/exports file
+  lineinfile:
+        dest: /etc/exports
+        line: /rhome/remoteuser0 172.25.250.10(rw,sync)
+
+- import_tasks: /root/ansible/roles/classroom/services/restart_service.yml
+- name: reboot classroom
+  command: init 6

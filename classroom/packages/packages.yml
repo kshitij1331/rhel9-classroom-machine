@@ -1,0 +1,8 @@
+- name: install packages
+  yum:
+    name:
+        - httpd
+        - chrony
+        - nfs-utils
+    state: present
+

@@ -1,0 +1,3 @@
+- hosts: test_classroom
+  roles:
+    - classroom

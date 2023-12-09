@@ -1,0 +1,13 @@
+- name: chronyd service start
+  service:
+        name: "{{item}}"
+        state: restarted
+        enabled: yes
+  loop:
+    - chronyd
+    - httpd
+    - nfs-server
+
+
+
+

@@ -1,0 +1,18 @@
+- name: configure classsroom network
+  nmcli:
+             conn_name: classroom
+             ifname: enp7s0
+             type: ethernet
+             ip4: 172.25.250.254/24
+             gw4: 172.25.250.254
+             dns4: 172.25.250.254
+             state: present
+
+- name: add hostname to /etc/hosts
+  lineinfile:
+        path: /etc/hosts
+        line: 172.25.250.254  content.example.com classroom
+
+- name: set hostname
+  hostname:
+    name: classroom.example.com

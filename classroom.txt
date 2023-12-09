@@ -1,0 +1,43 @@
+1. configure network
+	# nmtui
+			profile name: classroom
+			address: 172.25.250.254/24
+			gateway: 172.25.250.254
+			dns: 172.25.250.254
+			hostname: "classroom.example.com"
+			dns(/etc/hosts): "content.example.com"
+
+2. apache server configure
+	# yum install httpd -y
+	# systemctl start httpd
+	# systemctl enable httpd
+	# mkdir -p /var/www/html/rhel9.0/x86_64
+	# ln -s /a /var/www/html/rhel9.0/x86_64/dvd
+	# firewall-cmd --permanent --add-service=http
+        # firewall-cmd --permanent --add-port=80/tcp
+        # firewall-cmd --reload
+	
+3. NFS SERVER CONFIGURE
+	# yum install nfs-utils -y
+	# systemctl start nfs-server
+	# systemctl enable nfs-server
+	# firewall-cmd --permanent --add-service={nfs,mountd,rpc-bind}
+        # firewall-cmd --permanent --add-port={111,2049}/tcp
+        # firewall-cmd --reload
+        # mkdir /rhome
+        # useradd -d /rhome/remoteuser0 remoteuser0
+        # setfacl -m u:nobody:rwx /rhome/remoteuser0
+        # vi /etc/exports
+        		/rhome/remoteuser0 172.25.250.10(rw,sync)
+	# exportfs -rav
+	
+4. NTP server configure
+	# yum install chrony -y
+	# systemctl start chronyd
+	# systemctl enable chronyd
+	# firewall-cmd --permanent --add-service=ntp
+	# vi /etc/chrony.conf
+			allow 172.25.250.0/24
+	# systemctl restart chronyd
+	
+	

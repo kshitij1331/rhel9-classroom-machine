@@ -1,0 +1,23 @@
+- name: firewall add services
+  firewalld:
+        service: "{{item}}"
+        permanent: yes
+        state: enabled
+  loop:
+    - http
+    - nfs
+    - rpc-bind
+    - mountd
+    - ntp
+
+- name: firewall add ports
+  firewalld:
+        port: "{{item}}"
+        permanent: yes
+        state: enabled
+  loop:
+    - 80/tcp
+    - 111/tcp
+    - 2049/tcp
+
+
